@@ -7,35 +7,34 @@ import { ShoppingCart } from '@mui/icons-material';
 import useStyles from '../../styles/navbar.styles';
 import { useState } from 'react';
 import CartDropDown from '../../components/cart-dropdown/cart-dropdown.component';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { toggleIsCartOpen } from '../../actions/cart.action';
+import { connect } from 'react-redux';
 
-const NavBar = ({ cartItems, totalItems }) => {
-  const [isCartIconOpen, setIsCartIconOpen] = useState(false);
+const NavBar = ({ cartItems, totalItems, toggleIsCartOpen,  isCartIconOpen }) => {
   const classes = useStyles();
-  // const navigate = useNavigate();
+  const location = useLocation();
 
-  const cartIconClicked = () => {
-    setIsCartIconOpen(!isCartIconOpen);
-  };
-
-  // console.log(isCartIconOpen);
   return (
     <nav>
       <AppBar position='fixed' className={classes.navBar}>
         <Toolbar>
-          <Typography component={Link} to='/' variant='h6' className={classes.title} color='inherit'>
+          <Typography component={Link} to='./' variant='h6' className={classes.title} color='inherit'>
             <img className={classes.image} src={logo} alt='Commerce.js' height='25px' />
             Commerce JS
           </Typography>
           <div className={classes.grow} />
-          <div className={classes.button}  onClick={cartIconClicked}>
-            <IconButton aria-label='Show cart items' color='inherit'>
-              <Badge badgeContent={totalItems} color='secondary'>
-                <ShoppingCart />
-              </Badge>
-            </IconButton>
-          </div>
-          {isCartIconOpen && <CartDropDown cartItems={cartItems}/>}
+          {location.pathname === '/' && (
+            <div className={classes.button}  onClick={() => cartItems.length ? toggleIsCartOpen() : null}>
+              <IconButton aria-label='Show cart items' color='inherit'>
+                <Badge badgeContent={totalItems} color='secondary'>
+                  <ShoppingCart />
+                </Badge>
+              </IconButton>
+            </div>
+          )}
+          {isCartIconOpen && <CartDropDown cartItems={cartItems}  closeCartDropDown={toggleIsCartOpen}/>}
         </Toolbar>
       </AppBar>
     </nav>
@@ -45,6 +44,13 @@ const NavBar = ({ cartItems, totalItems }) => {
 NavBar.propTypes = {
   cartItems: PropTypes.array,
   totalItems: PropTypes.number,
+  toggleIsCartOpen: PropTypes.func,
 };
 
-export default NavBar;
+const mapStateToProps = ({ cart: { isCartIconOpen }  }) => ({isCartIconOpen});
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({ toggleIsCartOpen }, dispatch);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

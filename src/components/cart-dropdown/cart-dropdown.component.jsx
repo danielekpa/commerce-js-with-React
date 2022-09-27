@@ -6,12 +6,13 @@ import { Button, Container} from '@mui/material';
 import  useStyles from '../../styles/cart-dropdown.styles';
 import PropTypes from 'prop-types';
 
-function CartDropDown({ cartItems }) {
+function CartDropDown({ cartItems, closeCartDropDown }) {
   const classes = useStyles();
   const navigate = useNavigate();
 
   const goToCheckout = () => {
     // toggleIsCartOpen();
+    closeCartDropDown();
     navigate('./cart');
   };
 
@@ -29,6 +30,7 @@ function CartDropDown({ cartItems }) {
 
 CartDropDown.propTypes = {
   cartItems: PropTypes.array,
+  closeCartDropDown: PropTypes.func,
 };
 
 export default CartDropDown;

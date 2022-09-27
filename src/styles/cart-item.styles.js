@@ -15,4 +15,8 @@ export default makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
   },
+  editQty: {
+    height: 'auto',
+    maxWidth: 55
+  }
 }));
