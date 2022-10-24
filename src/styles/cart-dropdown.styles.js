@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles';
 
-export default makeStyles (() => ({
+export default makeStyles(() => ({
   cartDropDownContainer: {
     position: 'absolute',
     width: '240px !important',
@@ -29,5 +29,5 @@ export default makeStyles (() => ({
     marginTop: 'auto !important',
     justifySelf: 'flex-end !important',
     // flexGrow: 1,
-  }
+  },
 }));

@@ -13,8 +13,8 @@ export default makeStyles((theme) => ({
     marginRight: 'auto',
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
-    [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-      width: 600,
+    [theme.breakpoints.down('md')]: {
+      width: 'auto',
       marginLeft: 'auto',
       marginRight: 'auto',
     },

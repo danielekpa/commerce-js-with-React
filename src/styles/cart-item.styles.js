@@ -17,6 +17,6 @@ export default makeStyles(() => ({
   },
   editQty: {
     height: 'auto',
-    maxWidth: 55
-  }
+    maxWidth: 55,
+  },
 }));

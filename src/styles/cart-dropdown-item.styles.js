@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles';
 
-export default makeStyles (() => ({
+export default makeStyles(() => ({
   cartItemContainer: {
     width: '100%',
     display: 'flex',
@@ -26,5 +26,5 @@ export default makeStyles (() => ({
   },
   name: {
     fontSize: '16px',
-  }
+  },
 }));

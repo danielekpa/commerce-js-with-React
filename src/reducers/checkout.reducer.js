@@ -1,41 +1,55 @@
 import { ACTIONS } from '../constants/actions/types.actions';
 
+const defaultErrorState = {
+  hasError: false,
+  erroMessage: '',
+};
+
 const INITIAL_STATE = {
   loading: false,
   checkOutToken: {},
   countries: [],
   order: {},
-  // shippingStates: [],
-  // shippingOptions: []
+  ...defaultErrorState,
 };
 
 export const checkOutReducer = (state = INITIAL_STATE, action) => {
   const { type, payload } = action;
-  
+
   switch (type) {
     case ACTIONS.GENERATE_CHECKOUT_TKN:
-      return{
-        ...state,
-        ...payload,
-      };
-    case ACTIONS.ISLOADING_SHIPPING_DETAILS:
       return {
         ...state,
+        // ...defaultErrorState,
+        ...payload,
+      };
+    case ACTIONS.CHECKOUT_LOADING:
+      return {
+        ...state,
+        ...defaultErrorState,
         loading: true,
       };
     case ACTIONS.GET_SHIPPING_COUNTRIES:
       return {
         ...state,
+        // ...defaultErrorState,
         ...payload,
-        loading: false,
       };
     case ACTIONS.SET_CHECKOUT:
       return {
         ...state,
+        // ...defaultErrorState,
         ...payload,
         loading: false,
       };
     case ACTIONS.REFRESH_ORDER:
+      return {
+        ...state,
+        // ...defaultErrorState,
+        ...payload,
+        loading: false,
+      };
+    case ACTIONS.CHECKOUT_ERROR:
       return {
         ...state,
         ...payload,
@@ -45,12 +59,5 @@ export const checkOutReducer = (state = INITIAL_STATE, action) => {
       return INITIAL_STATE;
     default:
       return state;
-          /*
-          case ACTIONS.GET_SHIPPING_OPTIONS:
-            return {
-              ...state,
-              ...payload,
-              loading: false,
-            }; */
   }
 };

@@ -1,23 +1,26 @@
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react';
-import { Cart, Checkout } from './routes';
-import { NavBar, Products} from './components';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { fetchProducts } from './actions/fetch-products.action';
-import { fetchCart } from './actions/fetch-cart.action';
-
 import { createTheme } from '@mui/material/styles';
-import { ThemeProvider, } from '@mui/styles';
+import { ThemeProvider } from '@mui/styles';
+import { fetchProducts } from './actions/products/fetch-products.action';
+import { fetchCart } from './actions/cart/fetch-cart.action';
+
+import { NavBar, Products } from './components';
+import { Cart, Checkout } from './routes';
 
 import './App.css';
 import { commerce } from './lib/commerce';
 
 const theme = createTheme();
-function App({ fetchCart, fetchProducts, cartItems, cartCount }) {
+function App({
+  fetchCart, fetchProducts, cartItems, cartCount,
+}) {
   const [order, SetOrder] = useState();
   const [errorMessage, setErrorMessage] = useState();
 
@@ -26,7 +29,9 @@ function App({ fetchCart, fetchProducts, cartItems, cartCount }) {
     fetchCart();
   }, []);
 
-
+  commerce.customer.about().then((customer) => console.log(customer));
+  console.log(commerce.customer.id());
+  // commerce.customer
   // const refreshCart = async () => {
   //   const newCart = await commerce.cart.refresh();
   // };
@@ -47,12 +52,15 @@ function App({ fetchCart, fetchProducts, cartItems, cartCount }) {
         <div className="App">
           <NavBar totalItems={cartCount} cartItems={cartItems} />
           <Routes>
-            <Route exact path='/' element={<Products />} />
-            <Route exact path='/cart' element={(
-              <Cart />
-            )}
+            <Route exact path="/" element={<Products />} />
+            <Route
+              exact
+              path="/cart"
+              element={(
+                <Cart />
+              )}
             />
-            <Route exact path='/checkout' element={<Checkout order={order} />} />
+            <Route exact path="/checkout" element={<Checkout order={order} />} />
           </Routes>
         </div>
       </ThemeProvider>
@@ -60,10 +68,8 @@ function App({ fetchCart, fetchProducts, cartItems, cartCount }) {
   );
 }
 
-const mapStateToProps = ({ cart: { cartItems, cartCount } }) => ({ cartItems, cartCount  });
+const mapStateToProps = ({ cart: { cartItems, cartCount } }) => ({ cartItems, cartCount });
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchProducts, fetchCart }, dispatch);
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({ fetchProducts, fetchCart }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

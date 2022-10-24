@@ -1,43 +1,46 @@
 module.exports = {
-  'env': {
-    'browser': true,
-    'es2021': true,
-    'node': true
+  env: {
+    browser: true,
+    es2021: true,
+    node: true,
   },
-  'extends': [
+  extends: [
     'eslint:recommended',
+    'airbnb',
     'plugin:react/recommended',
     'plugin:jest/recommended',
     // 'plugin:react/jsx-runtime'
   ],
-  'overrides': [
+  overrides: [
   ],
-  'parserOptions': {
-    'sourceType': 'module',
-    'ecmaVersion': 'latest',
-    'ecmaFeatures': {
+  parserOptions: {
+    sourceType: 'module',
+    ecmaVersion: 'latest',
+    ecmaFeatures: {
       jsx: true,
     },
   },
-  'plugins': [
+  plugins: [
     'react',
-    'only-warn'
+    'only-warn',
   ],
-  'rules': {
+  rules: {
     // 'warn': 'warn',
-    'no-console': ['warn', { allow: ['warn']}],
-    'eqeqeq': 'off',
-    'curly': 'warn',
-    'semi': ['warn', 'always'],
-    'quotes': [
+    'no-console': ['warn', { allow: ['warn'] }],
+    eqeqeq: 'off',
+    curly: 'warn',
+    'max-len': 'off',
+    semi: ['warn', 'always'],
+    quotes: [
       'warn',
       'single',
       {
-        'avoidEscape': true
+        avoidEscape: true,
       }],
     'no-useless-escape': 1,
     'linebreak-style': ['warn', 'unix'],
-    'indent': ['warn', 2, { 'SwitchCase': 1 }],
+    indent: ['warn', 2, { SwitchCase: 1 }],
+    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
     // https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-boolean-value.md
     'react/jsx-boolean-value': ['warn', 'never', { always: [] }],
 
@@ -51,7 +54,12 @@ module.exports = {
 
     // Enforce or disallow spaces inside of curly braces in JSX attributes
     // https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/jsx-curly-spacing.md
-    'react/jsx-curly-spacing': ['warn', 'never', { allowMultiline: true }],
+    'react/jsx-curly-spacing': ['warn',
+      {
+        // allowMultiline: true,
+        when: 'never',
+        children: true,
+      }],
 
     'react/jsx-no-bind': ['warn', {
       ignoreRefs: true,
@@ -69,5 +77,5 @@ module.exports = {
       logical: 'parens-new-line',
       prop: 'parens-new-line',
     }],
-  }
+  },
 };

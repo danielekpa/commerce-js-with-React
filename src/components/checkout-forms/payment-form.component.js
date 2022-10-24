@@ -1,33 +1,28 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { Button, Divider, Typography } from '@mui/material';
-import CheckoutReview from './checkout-review.component';
 
 import { usePaystackPayment } from 'react-paystack';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import CheckoutReview from './checkout-review.component';
 
-import { handleCaptureCheckout } from '../../actions/capture-checkout.action';
-import { useEffect } from 'react';
-import { refreshCart } from '../../actions/refresh-cart.action';
-import { refreshOrder } from '../../actions/refresh-order';
- 
-function PaymentForm({ nextStep, handleCaptureCheckout, checkOutToken, shippingData, order, backStep, refreshCart, refreshOrder }) {
+import { handleCaptureCheckout } from '../../actions/checkout/capture-checkout.action';
+import { refreshCart } from '../../actions/cart/refresh-cart.action';
 
+function PaymentForm({
+  nextStep, handleCaptureCheckout, checkOutToken, shippingData, order, backStep, refreshCart,
+}) {
   console.log(order);
-
-  useEffect(() => {
-    async function goToConfirmation() {
-      await refreshCart();
-      nextStep();
-    }
-    goToConfirmation();
-  },[]);  
+  async function goToConfirmation() {
+    await refreshCart();
+    nextStep();
+  }
 
   const config = {
     reference: (new Date()).getTime().toString(),
     email: 'user@example.com',
-    amount: checkOutToken.subtotal?.raw + '00',
+    amount: `${checkOutToken.subtotal?.raw}00`,
     publicKey: process.env.REACT_APP_PAYSTACK_PUBLIC_KEY,
   };
 
@@ -39,21 +34,21 @@ function PaymentForm({ nextStep, handleCaptureCheckout, checkOutToken, shippingD
 
     const orderData = {
       line_items: checkOutToken.line_items,
-      customer: { 
+      customer: {
         firstname: shippingData.firstName,
         lastname: shippingData.lastName,
-        email: shippingData.email
+        email: shippingData.email,
       },
-      shipping: { 
-        name: 'Primary', 
+      shipping: {
+        name: 'Primary',
         street: shippingData.address1,
         town_city: shippingData.city,
         county_state: shippingData.state,
         postal_zip_code: shippingData.zip,
-        country: shippingData.country
+        country: shippingData.country,
       },
-      fulfillment: { 
-        shipping_method: shippingData.shippingOption 
+      fulfillment: {
+        shipping_method: shippingData.shippingOption,
       },
       payment: {
         /* gateway: 'paystack',
@@ -68,11 +63,14 @@ function PaymentForm({ nextStep, handleCaptureCheckout, checkOutToken, shippingD
           cvc: '123',
           postal_zip_code: '94107',
         },
-      }
+      },
     };
 
+    console.log(checkOutToken?.id, orderData);
+
     handleCaptureCheckout(checkOutToken?.id, orderData);
-    // order?.id && 
+    goToConfirmation();
+    // order?.id &&
   };
 
   // you can call this function anything
@@ -87,14 +85,16 @@ function PaymentForm({ nextStep, handleCaptureCheckout, checkOutToken, shippingD
     <>
       <CheckoutReview checkOutToken={checkOutToken} />
       <Divider />
-      <Typography variant='h6' gutterBottom style={{ margin: '20px 0'}}>Payment method</Typography>
+      <Typography variant="h6" gutterBottom style={{ margin: '20px 0' }}>Payment method</Typography>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between'}}>
-        <Button variant='outlined' onClick={backStep}>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Button variant="outlined" onClick={backStep}>
           Back
         </Button>
-        <Button variant='contained' color='primary' onClick={handlePayment}>
-          Pay {checkOutToken.subtotal?.formatted_with_symbol}
+        <Button variant="contained" color="primary" onClick={handlePayment}>
+          Pay
+          {' '}
+          {checkOutToken.subtotal?.formatted_with_symbol}
         </Button>
       </div>
       {/* <PaystackConsumer {...componentProps} >
@@ -104,10 +104,8 @@ function PaymentForm({ nextStep, handleCaptureCheckout, checkOutToken, shippingD
   );
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ handleCaptureCheckout, refreshCart, refreshOrder }, dispatch);
-};
+const mapDispatchToProps = (dispatch) => bindActionCreators({ handleCaptureCheckout, refreshCart }, dispatch);
 
-const mapStateToProps = ({ checkout: { order }}) => ({ order });
+const mapStateToProps = ({ checkout: { order } }) => ({ order });
 
 export default connect(mapStateToProps, mapDispatchToProps)(memo(PaymentForm));
